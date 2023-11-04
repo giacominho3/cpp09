@@ -84,18 +84,34 @@ void BitcoinExchange::parseLine(std::string line)
 		throw BadInputException();
 	if (key[5] == '1' && key[6] > '2')
 		throw BadInputException();
-	try
-	{
+	
+	if (this->_dToVal.find(key) != this->_dToVal.end())
 		to_find = this->_dToVal.at(key);
-		float res = value * to_find;
-		if (res < 0)
-			throw NonPositiveException();
-		std::cout << key << " => " << value << " = " << res << std::endl; 
-	}
-	catch (const std::out_of_range& e)
+	else
+		to_find = findClosest(key);
+	float res = value * to_find;
+	if (res < 0)
+		throw NonPositiveException();
+	std::cout << key << " => " << value << " = " << res << std::endl; 
+}
+
+float BitcoinExchange::findClosest(std::string key)
+{
+	std::string temp = key;
+
+	while (temp[8] >= '0')
 	{
-        std::cerr << "Chiave non trovata all'interno del database: " << e.what() << std::endl;
+		while (temp[9] >= '0')
+		{
+			if (this->_dToVal.find(temp) != this->_dToVal.end())
+				return (this->_dToVal.at(temp));
+			temp[9]--;
+			//std::cout << temp << std::endl;
+		}
+		temp[9] = 9;
+		temp[8]--;
 	}
+	return (0);
 }
 
 const char *BitcoinExchange::NonPositiveException::what(void) const throw()

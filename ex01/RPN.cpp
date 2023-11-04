@@ -26,8 +26,8 @@ RPN::RPN(std::string args)
 		}
 		i++;
 	}
-	if (this->operands.size() - ns != 1)
-		throw std::exception(); // to replace
+	// if (this->operands.size() - ns != 1)
+	// 	throw std::exception(); // to replace
 }
 
 RPN::RPN(const RPN &other)
@@ -53,13 +53,18 @@ std::stack<int> RPN::getOperands()
 
 void RPN::execOperations(char sign)
 {
+	int n2 = this->operands.top();
+	this->operands.pop();
 	int n1 = this->operands.top();
 	this->operands.pop();
-	int n2 = this->operands.top();
 	if (sign == '+')
 		this->operands.push(n1 + n2);
-	if (sign == '-')
+	else if (sign == '-')
 		this->operands.push(n1 - n2);
+	else if (sign == '*')
+		this->operands.push(n1 * n2);
+	else if (sign == '/')
+		this->operands.push(n1 / n2);
 }
 
 // std::ostream& operator<<(std::ostream& os, std::list<int> &l)

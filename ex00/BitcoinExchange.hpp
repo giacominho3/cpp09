@@ -22,6 +22,7 @@ class BitcoinExchange
 		void add(std::string line);
 		void readFile(std::string pathname);
 		void parseLine(std::string line);
+		float findClosest(std::string key); 
 
 		class NonPositiveException: public std::exception
     	{
